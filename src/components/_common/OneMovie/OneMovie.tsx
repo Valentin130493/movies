@@ -3,24 +3,20 @@ import "./OneMovie.scss";
 import deleteIcon from "../../../assets/static/svg/delete.svg";
 
 interface Props {
-  title: string;
-  genre: string;
-  creator: string;
-  year: number;
   onClick: (id: number) => void;
   Delete: (event: React.MouseEvent<HTMLImageElement>, id: number) => void;
-  id: number;
+
+  item: {
+    id: number;
+    title: string;
+    genre: string;
+    creator: string;
+    year: number;
+  };
 }
 
-const OneMovie: React.FC<Props> = ({
-  title,
-  creator,
-  genre,
-  year,
-  onClick,
-  Delete,
-  id,
-}) => {
+const OneMovie: React.FC<Props> = ({ item, onClick, Delete }) => {
+  const { id, title, genre, year, creator } = item;
   return (
     <div className={"oneMovie__wrapper"} onClick={() => onClick(id)}>
       <section className={"movie"}>

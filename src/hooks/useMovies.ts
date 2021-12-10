@@ -6,17 +6,14 @@ import {
   actionGetMovie,
   actionGetMovies,
 } from "../store/action/actionMovies";
-import { actionSetLoaderStatus } from "../store/action/actionLoading";
 
 export default function useMovies() {
   const dispatch = useDispatch();
   const getMovies = async (page: number) => {
     try {
       const url = `${API_BASE_URL}${API_ENDPOINTS.MOVIE}?page=${page}`;
-      dispatch(actionSetLoaderStatus(true));
       const res = await Http.get(url);
       dispatch(actionGetMovies(res));
-      dispatch(actionSetLoaderStatus(false));
     } catch (e) {
       console.log(e);
     }
@@ -39,10 +36,8 @@ export default function useMovies() {
   const getCurrentMovie = async (id: number) => {
     try {
       const url = `${API_BASE_URL}${API_ENDPOINTS.MOVIE}${id}/`;
-      dispatch(actionSetLoaderStatus(true));
       const res = await Http.get(url);
       dispatch(actionGetMovie(res));
-      dispatch(actionSetLoaderStatus(false));
     } catch (e) {
       throw e;
     }
@@ -61,11 +56,10 @@ export default function useMovies() {
     }
   };
 
-  const deleteOneMovie = async (id: number, page: number) => {
+  const deleteOneMovie = async (id: number) => {
     try {
       const url = `${API_BASE_URL}${API_ENDPOINTS.MOVIE}${id}/`;
       await Http.delete(url);
-      await getMovies(page);
     } catch (e) {
       console.log(e);
     }

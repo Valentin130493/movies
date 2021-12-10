@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import { Http } from "../services/http";
 import { useDispatch } from "react-redux";
 import { actionGetUserInfo } from "../store/action/actionGetUserInfo";
-import { actionSetLoaderStatus } from "../store/action/actionLoading";
 
 function useAuth() {
   const navigation = useNavigate();
@@ -35,20 +34,18 @@ function useAuth() {
     try {
       const url = `${API_BASE_URL}${API_ENDPOINTS.REGISTRATION}`;
       await axios.post(url, data);
+      navigation(ROUTES.LOGIN);
       toast.success("Your account was create");
     } catch (e) {
-      toast.error("Account don't create, try again");
-      console.log(e);
+      toast.error(`${e}`);
     }
   };
 
   const loadUser = async () => {
     try {
       const url = `${API_BASE_URL}${API_ENDPOINTS.USER}`;
-      dispatch(actionSetLoaderStatus(true));
       const res = await Http.get(url);
       dispatch(actionGetUserInfo(res));
-      dispatch(actionSetLoaderStatus(false));
     } catch (e) {
       throw e;
     }

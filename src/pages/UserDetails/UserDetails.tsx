@@ -1,20 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./UserDetails.scss";
 import useAuth from "../../hooks/useAuth";
 import { useSelector } from "react-redux";
 import { ApplicationState } from "../../store";
 import { User } from "../../types/User";
 import LoaderCommon from "../../components/_common/Loader/Loader";
-import { LoaderState } from "../../store/reducers/loaderReducer";
 
 const UserDetails = () => {
   const { loadUser } = useAuth();
+  const [isDataLoading, setIsDataLoading] = useState(true);
   useEffect(() => {
-    loadUser();
+    loadUser().then(() => setIsDataLoading(false));
   }, []);
-  const { isDataLoading } = useSelector<ApplicationState, LoaderState>(
-    (state) => state.loader
-  );
+
   const user = useSelector<ApplicationState, User>((state) => state.user);
   const { email, first_name, username, last_name } = user;
   return isDataLoading ? (

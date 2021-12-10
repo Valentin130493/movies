@@ -28,9 +28,7 @@ const RegistrationForm = () => {
         initialValues={initValues}
         validationSchema={registrationSchema}
         onSubmit={(values: FormikValues) => {
-          console.log(values);
           register(values);
-          navigate(ROUTES.LOGIN);
         }}
       >
         {({

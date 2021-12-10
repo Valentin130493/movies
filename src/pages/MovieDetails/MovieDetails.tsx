@@ -46,7 +46,7 @@ const MovieDetails = () => {
   };
 
   const deleteMovie = () => {
-    deleteOneMovie(movie.id, 1);
+    deleteOneMovie(movie.id);
     navigate(ROUTES.MOVIES);
   };
 

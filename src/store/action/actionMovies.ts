@@ -23,6 +23,13 @@ export const actionChangeMovie = (data: Movie): CustomAction => {
   };
 };
 
+export const actionDeleteMovie = (data: number): CustomAction => {
+  return {
+    type: MOVIES_ACTION_TYPES.DELETE_MOVIE,
+    data,
+  };
+};
+
 export const actionSetPage = (data: number): CustomAction => {
   return {
     type: MOVIES_ACTION_TYPES.SET_PAGE,

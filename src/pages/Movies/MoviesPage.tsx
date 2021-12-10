@@ -8,43 +8,41 @@ import OneMovie from "../../components/_common/OneMovie/OneMovie";
 import { Button, Pagination } from "@mui/material";
 import ModalForm from "../../components/Forms/ModalForm/ModalForm";
 import { useNavigate } from "react-router-dom";
-import { LoaderState } from "../../store/reducers/loaderReducer";
 import LoaderCommon from "../../components/_common/Loader/Loader";
-import { actionSetLoaderStatus } from "../../store/action/actionLoading";
-import { actionSetPage } from "../../store/action/actionMovies";
+import {
+  actionDeleteMovie,
+  actionSetPage,
+} from "../../store/action/actionMovies";
 
 const MoviesPage = () => {
   const { getMovies, deleteOneMovie, getCurrentMovie } = useMovies();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { isDataLoading } = useSelector<ApplicationState, LoaderState>(
-    (state) => state.loader
-  );
   const { results, count, CurrentPage } = useSelector<ApplicationState, Movies>(
     (state) => state.movies
   );
 
+  const [isDataLoading, setIsDataLoading] = useState(true);
   const [page, setPage] = useState(CurrentPage);
   useEffect(() => {
-    getMovies(page);
+    getMovies(page).then(() => setIsDataLoading(false));
   }, [page]);
   const [isOpen, setIsOpen] = useState(true);
   const currentCount = Math.ceil(count / 10);
 
   const getMovie = async (id: number) => {
     dispatch(actionSetPage(page));
-    dispatch(actionSetLoaderStatus(true));
     await getCurrentMovie(id);
     navigate(`/movies/${id}`);
-    dispatch(actionSetLoaderStatus(false));
   };
 
   const deleteMovie = (
     event: React.MouseEvent<HTMLImageElement>,
     id: number
   ) => {
-    deleteOneMovie(id, page);
+    dispatch(actionDeleteMovie(id));
+    deleteOneMovie(id);
     event.stopPropagation();
   };
 
@@ -60,7 +58,6 @@ const MoviesPage = () => {
   return (
     <div className={"movies__wrapper"}>
       <header className={"movies__header"}>
-        <h4> All movies count : {count} </h4>
         <Button
           className={"btn__right"}
           variant={"contained"}
@@ -76,17 +73,13 @@ const MoviesPage = () => {
         {isDataLoading ? (
           <LoaderCommon />
         ) : (
-          results.map(({ title, creator, genre, year, id }, index) => {
+          results.map((item, index) => {
             return (
               <OneMovie
+                item={item}
                 key={index}
-                title={title}
-                genre={genre}
-                creator={creator}
-                year={year}
                 onClick={getMovie}
                 Delete={deleteMovie}
-                id={id}
               />
             );
           })
